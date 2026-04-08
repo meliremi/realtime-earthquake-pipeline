@@ -361,12 +361,11 @@ Chaque \texttt{feature} représente un séisme :
 
 \begin{lstlisting}[style=bash, caption={Appel curl vers l'API USGS}]
 # Recuperer les seismes des dernières 24h de magnitude >= 2.5
-curl -s "https://earthquake.usgs.gov/fdsnws/event/1/query?\
-format=geojson&\
-starttime=$(date -u -d "1 day ago" +%Y-%m-%dT%H:%M:%S 2>/dev/null || date -u -v-1d +%Y-%m-%dT%H:%M:%S)&\
-endtime=$(date -u +%Y-%m-%dT%H:%M:%S)&\
-minmagnitude=2.5&\
-limit=5" | python3 -m json.tool | head -80
+$start = (Get-Date).AddDays(-1).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss")
+$end = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss")
+$url = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=$start&endtime=$end&minmagnitude=2.5&limit=5"
+
+curl.exe -s $url | python -m json.tool | Select-Object -First 80
 \end{lstlisting}
 
 \subsection{Analyse du producer fourni}
